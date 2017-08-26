@@ -24,9 +24,11 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+using MonoDevelop.Components;
+
 namespace MonoDevelop.VersionControl.TFS.GUI.Server
 {
-    internal class TFSRepositoryEditor : IRepositoryEditor
+    internal class TFSRepositoryEditor : Gtk.Bin, IRepositoryEditor
     {
         //        readonly AddServerWidget widget;
         //        readonly TFSRepository repo;
@@ -53,6 +55,8 @@ namespace MonoDevelop.VersionControl.TFS.GUI.Server
                 return vbox; //(Gtk.Widget)Toolkit.CurrentEngine.GetNativeWidget(widget);
             }
         }
+
+        Control IRepositoryEditor.Widget => throw new System.NotImplementedException();
 
         #endregion
     }

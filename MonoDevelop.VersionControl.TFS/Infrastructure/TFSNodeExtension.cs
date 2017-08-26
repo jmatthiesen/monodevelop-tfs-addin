@@ -44,7 +44,7 @@ namespace MonoDevelop.VersionControl.TFS.Infrastructure
             return typeof(ProjectFile).IsAssignableFrom(dataType)
             || typeof(SystemFile).IsAssignableFrom(dataType)
             || typeof(IFolderItem).IsAssignableFrom(dataType)
-            || typeof(IWorkspaceObject).IsAssignableFrom(dataType);
+            || typeof(WorkspaceObject).IsAssignableFrom(dataType);
         }
 
         public override Type CommandHandlerType

@@ -28,7 +28,10 @@
 using System;
 using System.Linq;
 using Autofac;
+using MonoDevelop.Components;
 using MonoDevelop.Components.Commands;
+using MonoDevelop.Components.Docking;
+using MonoDevelop.Core;
 using MonoDevelop.Ide;
 using MonoDevelop.Ide.Gui;
 using MonoDevelop.VersionControl.TFS.Commands;
@@ -37,11 +40,12 @@ using MonoDevelop.VersionControl.TFS.GUI.VersionControl;
 using MonoDevelop.VersionControl.TFS.GUI.WorkItems;
 using MonoDevelop.VersionControl.TFS.Infrastructure;
 using MonoDevelop.VersionControl.TFS.WorkItemTracking.Structure;
+using Gtk;
 using Xwt;
 
 namespace MonoDevelop.VersionControl.TFS.GUI
 {
-    public class TeamExplorerPad : IPadContent
+    public class TeamExplorerPad : PadContent
     {
         private enum NodeType
         {
@@ -55,20 +59,24 @@ namespace MonoDevelop.VersionControl.TFS.GUI
             Exception
         }
 
-        private readonly VBox _content = new VBox();
-        private readonly TreeView _treeView = new TreeView();
+        private readonly Xwt.VBox _content = new Xwt.VBox();
+        private readonly Xwt.TreeView _treeView = new Xwt.TreeView();
         private readonly DataField<string> _name = new DataField<string>();
         private readonly DataField<NodeType> _type = new DataField<NodeType>();
         private readonly DataField<object> _item = new DataField<object>();
-        private readonly TreeStore _treeStore;
+        private readonly Xwt.TreeStore _treeStore;
         private readonly System.Action onServersChanged;
         private readonly TFSVersionControlService _service;
 
         public TeamExplorerPad()
         {
-            _treeStore = new TreeStore(_name, _type, _item);
+            _treeStore = new Xwt.TreeStore(_name, _type, _item);
             _service = DependencyInjection.Container.Resolve<TFSVersionControlService>();
-            onServersChanged = DispatchService.GuiDispatch<System.Action>(UpdateData);
+            onServersChanged = delegate ()
+            {
+                Runtime.RunInMainThread(() => UpdateData());
+            
+            };
             _service.OnServersChange += onServersChanged;
             BuildGui();
         }
@@ -83,12 +91,23 @@ namespace MonoDevelop.VersionControl.TFS.GUI
 
         #region IPadContent implementation
 
-        public void Initialize(IPadWindow window)
+        protected override void Initialize(IPadWindow window)
         {
-            var toolBar = window.GetToolbar(Gtk.PositionType.Top);
-            CommandToolButton button = new CommandToolButton(TFSCommands.ConnectToServer, IdeApp.CommandService) { StockId = Gtk.Stock.Add };
-            toolBar.Add(button);
-            UpdateData();
+            base.Initialize(window);
+            //TODO: Add toolbar support
+   //         DockItemToolbar toolBar = window.GetToolbar(Components.Docking.DockPositionType.Top);
+   //         Button connectToServer = new Button(new ImageView(Ide.Gui.Stock.Stop, IconSize.Small));
+			//buttonStop.Clicked += new EventHandler(OnStopClicked);
+			//buttonStop.Sensitive = false;
+			//buttonStop.TooltipText = GettextCatalog.GetString("Cancel running test");
+			//buttonStop.Accessible.Name = "TestPad.StopAll";
+			//buttonStop.Accessible.SetTitle(GettextCatalog.GetString(("Cancel")));
+			//buttonStop.Accessible.Description = GettextCatalog.GetString("Stops the current test run");
+			//topToolbar.Add(buttonStop);
+			//topToolbar.ShowAll();
+            //CommandToolButton button = new CommandToolButton(TFSCommands.ConnectToServer, IdeApp.CommandService) { StockId = Gtk.Stock.Add };
+            //toolBar.Add(button);
+            //UpdateData();
         }
 
         public void RedrawContent()
@@ -96,18 +115,19 @@ namespace MonoDevelop.VersionControl.TFS.GUI
             UpdateData();
         }
 
-        public Gtk.Widget Control { get { return (Gtk.Widget)Toolkit.CurrentEngine.GetNativeWidget(_content); } }
+public override Control Control => throw new NotImplementedException();
 
         #endregion
 
         #region IDisposable implementation
 
-        public void Dispose()
+        public override void Dispose()
         {
             _service.OnServersChange -= onServersChanged;
             _treeView.Dispose();
             _treeStore.Dispose();
             _content.Dispose();
+            base.Dispose();
         }
 
         #endregion

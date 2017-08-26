@@ -37,7 +37,7 @@ namespace MonoDevelop.VersionControl.TFS.Commands
         {
             using (var dialog = new ConnectToServerDialog())
             {
-                dialog.Run(Xwt.Toolkit.CurrentEngine.WrapWindow(MessageService.RootWindow));
+                dialog.Run(Xwt.Toolkit.CurrentEngine.WrapWindow(MessageService.RootWindow.GetNativeWidget<Gtk.Window>()));
             }
         }
 

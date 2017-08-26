@@ -46,7 +46,7 @@ namespace MonoDevelop.VersionControl.TFS.WorkItemTracking
             this.collection = collection;
         }
 
-        public List<WorkItem> LoadByWorkItem(IProgressMonitor progress)
+        public List<WorkItem> LoadByWorkItem(ProgressMonitor progress)
         {
             var ids = this.collection.GetWorkItemIds(this.query, CachedMetaData.Instance.Fields);
             var list = new List<WorkItem>();
@@ -60,7 +60,7 @@ namespace MonoDevelop.VersionControl.TFS.WorkItemTracking
             return list;
         }
 
-        public List<WorkItem> LoadByPage(IProgressMonitor progress)
+        public List<WorkItem> LoadByPage(ProgressMonitor progress)
         {
             var ids = this.collection.GetWorkItemIds(this.query, CachedMetaData.Instance.Fields);
             int pages = (int)Math.Ceiling((double)ids.Count / (double)50);

@@ -36,7 +36,7 @@ namespace MonoDevelop.VersionControl.TFS.MonoDevelopWrappers.Implementation
 
         public ProgressDisplay()
         {
-            progressMonitor = new MessageDialogProgressMonitor(DispatchService.IsGuiThread, false, false);
+            progressMonitor = new MessageDialogProgressMonitor(false, false);
         }
 
         public void Dispose()
@@ -54,6 +54,6 @@ namespace MonoDevelop.VersionControl.TFS.MonoDevelopWrappers.Implementation
             progressMonitor.EndTask();
         }
 
-        public bool IsCancelRequested { get { return progressMonitor.IsCancelRequested; } }
+        public bool IsCancelRequested { get { throw new System.NotImplementedException(); } }
     }
 }

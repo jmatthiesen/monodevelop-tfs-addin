@@ -63,7 +63,7 @@ namespace MonoDevelop.VersionControl.TFS.Core.Structure
 
         public string Name { get; private set; }
 
-        public string LocationServicePath { get; private set; }
+        public string LocationServiceUrl { get; private set; }
 
         public string ActiveWorkspaceName { get; set; }
 
@@ -104,7 +104,7 @@ namespace MonoDevelop.VersionControl.TFS.Core.Structure
         public TService GetService<TService>()
             where TService : TFSService
         {
-            var locationService = new LocationService(this.Server.Uri, this.LocationServicePath) { Server = this.Server };
+            var locationService = new LocationService(this.LocationServiceUrl) { Server = this.Server };
             return locationService.LoadService<TService>();
         }
 
@@ -115,7 +115,7 @@ namespace MonoDevelop.VersionControl.TFS.Core.Structure
             var element = new XElement("ProjectCollection",
                                 new XAttribute("Id", this.Id),
                                 new XAttribute("Name", this.Name),
-                                new XAttribute("LocationServicePath", this.LocationServicePath),
+                                new XAttribute("LocationServiceUrl", this.LocationServiceUrl),
                                 new XAttribute("ActiveWorkspaceName", this.ActiveWorkspaceName));
 
             element.Add(Projects.Select(p => p.ToConfigXml()));
@@ -129,9 +129,10 @@ namespace MonoDevelop.VersionControl.TFS.Core.Structure
             projectCollection.Name = element.GetAttributeValue("DisplayName");
 
             var locationServiceElement = element.GetDescendants("ServiceDefinition")
-                                                .Single(el => string.Equals(el.GetAttributeValue("serviceType"), "LocationService"));
+                                                .Single(el => string.Equals(el.GetAttributeValue("serviceType"), "LocationService"))
+                                                .GetDescendants("LocationMapping").Single();
 
-            projectCollection.LocationServicePath = locationServiceElement.GetAttributeValue("relativePath");
+            projectCollection.LocationServiceUrl = locationServiceElement.GetAttributeValue("location");
 
             return projectCollection;
         }
@@ -144,7 +145,7 @@ namespace MonoDevelop.VersionControl.TFS.Core.Structure
             var projectCollection = new ProjectCollection(server);
             projectCollection.Id = element.GetGuidAttribute("Id");
             projectCollection.Name = element.GetAttributeValue("Name");
-            projectCollection.LocationServicePath = element.GetAttributeValue("LocationServicePath");
+            projectCollection.LocationServiceUrl = element.GetAttributeValue("LocationServiceUrl");
             projectCollection.ActiveWorkspaceName = element.GetAttributeValue("ActiveWorkspaceName");
             projectCollection.Projects.AddRange(element.Elements("Project").Select(e => ProjectInfo.FromConfigXml(e, projectCollection)));
 
@@ -158,7 +159,7 @@ namespace MonoDevelop.VersionControl.TFS.Core.Structure
             {
                 Id = this.Id,
                 Name = this.Name,
-                LocationServicePath =  this.LocationServicePath,
+                LocationServiceUrl =  this.LocationServiceUrl,
             };
         }
 

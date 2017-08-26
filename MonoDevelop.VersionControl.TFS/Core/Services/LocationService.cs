@@ -48,8 +48,8 @@ namespace MonoDevelop.VersionControl.TFS.Core.Services
 
         #endregion
 
-        internal LocationService(System.Uri serverUri, string servicePath)
-            : base(serverUri, servicePath)
+        internal LocationService(string serviceUrl)
+            : base(serviceUrl)
         {
         }
 

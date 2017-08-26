@@ -173,6 +173,12 @@ namespace MonoDevelop.VersionControl.TFS
                 repo.Value.Refresh();
             }
         }
+
+        protected override FilePath OnGetRepositoryPath(FilePath path, string id)
+        {
+            TFSRepository repo = this.GetRepository(path, id);
+            return repo.RootPath;
+        }
     }
 }
 

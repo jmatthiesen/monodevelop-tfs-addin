@@ -35,7 +35,7 @@ namespace MonoDevelop.VersionControl.TFS.GUI
 
         #region implemented abstract members of OptionsPanel
 
-        public override Gtk.Widget CreatePanelWidget()
+        public override MonoDevelop.Components.Control CreatePanelWidget()
         {
             this.widget = new TFSOptionsWidget();
             return (Gtk.Widget)Xwt.Toolkit.CurrentEngine.GetNativeWidget(this.widget);

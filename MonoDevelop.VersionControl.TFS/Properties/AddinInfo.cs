@@ -36,7 +36,7 @@ using Mono.Addins;
 [assembly:AddinUrl("http://indomitable.github.io/monodevelop-tfs-addin")]
 [assembly:AddinAuthor("Ventsislav Mladenov <ventsislav.mladenov@gmail.com>")]
 
-[assembly:AddinDependency("Core", "5.8")]
-[assembly:AddinDependency("Ide", "5.8")]
-[assembly:AddinDependency("VersionControl", "5.8")]
+[assembly:AddinDependency("Core", "7.0")]
+[assembly:AddinDependency("Ide", "7.0")]
+[assembly:AddinDependency("VersionControl", "7.0")]
 

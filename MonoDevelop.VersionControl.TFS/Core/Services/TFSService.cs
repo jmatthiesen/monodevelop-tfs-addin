@@ -36,6 +36,17 @@ namespace MonoDevelop.VersionControl.TFS.Core.Services
 {
     internal abstract class TFSService
     {
+        protected TFSService(string serviceUrl)
+        {
+            Uri url;
+            if (Uri.TryCreate(serviceUrl, UriKind.Absolute, out url))
+            {
+                this.Url = url;
+                this.BaseUri = new Uri(url.GetComponents(UriComponents.HostAndPort, UriFormat.Unescaped));
+                this.ServicePath = url.GetComponents(UriComponents.Path, UriFormat.UriEscaped);
+            }
+        }
+
         protected TFSService(Uri baseUri, string servicePath)
         {
             this.BaseUri = baseUri;

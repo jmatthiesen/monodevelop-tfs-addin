@@ -41,4 +41,4 @@ using MonoDevelop.VersionControl.TFS.MonoDevelopWrappers;
 [assembly: AssemblyDefaultAlias("MonoDevelop.VersionControl.TFS.dll")]
 [assembly: NeutralResourcesLanguage("en-US")]
 [assembly: InternalsVisibleTo("MonoDevelop.VersionControl.TFS.Tests")]
-[assembly: MonoDevelopVersion("5.8")]
+[assembly: MonoDevelopVersion("7.0")]

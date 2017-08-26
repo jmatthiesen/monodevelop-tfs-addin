@@ -44,11 +44,6 @@ namespace MonoDevelop.VersionControl.TFS.GUI.WorkItems
             this.ContentName = GettextCatalog.GetString("Work Items");
         }
 
-        public override void Load(string fileName)
-        {
-            throw new NotImplementedException();
-        }
-
         private void Load(StoredQuery query, ProjectCollection collection)
         {
             this.ContentName = GettextCatalog.GetString("Work Items: " + query.QueryName);

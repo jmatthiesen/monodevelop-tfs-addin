@@ -32,6 +32,7 @@ using System.Linq;
 using Autofac;
 using Gdk;
 using Gtk;
+using MonoDevelop.Components;
 using MonoDevelop.Core;
 using MonoDevelop.Ide;
 using MonoDevelop.Ide.Gui;
@@ -49,7 +50,7 @@ using MonoDevelop.VersionControl.TFS.VersionControl.Models;
 
 namespace MonoDevelop.VersionControl.TFS.GUI.VersionControl
 {
-    public sealed class SourceControlExplorerView : AbstractViewContent
+    public sealed class SourceControlExplorerView : MonoDevelop.Ide.Gui.ViewContent
     {
         private readonly VBox _view = new VBox();
         private readonly Label _localFolder = new Label();
@@ -122,11 +123,6 @@ namespace MonoDevelop.VersionControl.TFS.GUI.VersionControl
             IdeApp.Workbench.OpenDocument(sourceControlExplorerView, true);
         }
 
-        public override void Load(string fileName)
-        {
-            throw new NotSupportedException();
-        }
-
         private void Load(ProjectCollection collection)
         {
             if (this.projectCollection != null && collection.Id == this.projectCollection.Id)
@@ -145,7 +141,7 @@ namespace MonoDevelop.VersionControl.TFS.GUI.VersionControl
             }
         }
 
-        public override Widget Control { get { return _view; } }
+        public override Control Control { get { return _view; } }
 
         private void BuildGui()
         {
@@ -512,9 +508,10 @@ namespace MonoDevelop.VersionControl.TFS.GUI.VersionControl
                 {
                     if (item.IsInWorkspace)
                     {
-                        if (Projects.Services.ProjectService.IsWorkspaceItemFile(item.LocalPath))
+                        FilePath filePath = new FilePath(item.LocalPath);
+                        if (Projects.Services.ProjectService.IsWorkspaceItemFile(filePath))
                         {
-                            IdeApp.Workspace.OpenWorkspaceItem(item.LocalPath, true);
+                            IdeApp.Workspace.OpenWorkspaceItem(filePath, true);
                         }
                         else
                         {
@@ -523,14 +520,14 @@ namespace MonoDevelop.VersionControl.TFS.GUI.VersionControl
                     }
                     else
                     {
-                        var filePath = this.DownloadItemToTemp(item);
+                        var filePath = new FilePath(this.DownloadItemToTemp(item));
                         if (Projects.Services.ProjectService.IsWorkspaceItemFile(filePath))
                         {
                             var parentFolder = _currentWorkspace.GetExtendedItem(ItemSpec.FromServerPath(item.ServerPath.ParentPath), ItemType.Folder);
                             if (parentFolder == null)
                                 return;
                             GetLatestVersion(new List<ExtendedItem> { parentFolder });
-                            var futurePath = _currentWorkspace.Data.GetLocalPathForServerPath(item.ServerPath);
+                            var futurePath = new FilePath(_currentWorkspace.Data.GetLocalPathForServerPath(item.ServerPath));
                             IdeApp.Workspace.OpenWorkspaceItem(futurePath, true);
                             filePath.Delete();
                         }

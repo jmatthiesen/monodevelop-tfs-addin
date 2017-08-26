@@ -125,10 +125,10 @@ namespace MonoDevelop.VersionControl.TFS.GUI.VersionControl
             acceptYours.Sensitive = acceptTheirs.Sensitive = acceptMerge.Sensitive = viewBase.Sensitive = viewTheir.Sensitive = (listView.SelectedRow > -1);
         }
 
-        private void RowClicked()
+        private async void RowClicked()
         {
             var conflict = listStore.GetValue(listView.SelectedRow, itemField);
-            var doc = IdeApp.Workbench.OpenDocument(new FilePath(conflict.TargetLocalItem), (MonoDevelop.Projects.Project)null);
+            var doc = await IdeApp.Workbench.OpenDocument(new FilePath(conflict.TargetLocalItem), (MonoDevelop.Projects.Project)null);
             if (doc != null)
             {
                 doc.Window.SwitchView(doc.Window.FindView<MonoDevelop.VersionControl.Views.IDiffView>());
@@ -141,20 +141,20 @@ namespace MonoDevelop.VersionControl.TFS.GUI.VersionControl
             }
         }
 
-        private void ViewBaseClicked()
+        private async void ViewBaseClicked()
         {
             var conflict = listStore.GetValue(listView.SelectedRow, itemField);
             var fileName = this.workspace.DownloadToTemp(conflict.BaseDowloadUrl);
-            var doc = IdeApp.Workbench.OpenDocument(new FilePath(fileName), (MonoDevelop.Projects.Project)null);
+            var doc = await IdeApp.Workbench.OpenDocument(new FilePath(fileName), (MonoDevelop.Projects.Project)null);
             doc.Window.ViewContent.ContentName = Path.GetFileName(conflict.TargetLocalItem) + " - v" + conflict.BaseVersion;
             doc.Closed += (o, e) => fileName.Delete();
         }
 
-        private void ViewTheirClicked()
+        private async void ViewTheirClicked()
         {
             var conflict = listStore.GetValue(listView.SelectedRow, itemField);
             var fileName = this.workspace.DownloadToTemp(conflict.TheirDowloadUrl);
-            var doc = IdeApp.Workbench.OpenDocument(new FilePath(fileName), (MonoDevelop.Projects.Project)null);
+            var doc = await IdeApp.Workbench.OpenDocument(new FilePath(fileName), (MonoDevelop.Projects.Project)null);
             doc.Window.ViewContent.ContentName = Path.GetFileName(conflict.TargetLocalItem) + " - v" + conflict.TheirVersion;
             doc.Closed += (o, e) => fileName.Delete();
         }
@@ -229,11 +229,6 @@ namespace MonoDevelop.VersionControl.TFS.GUI.VersionControl
         }
 
         #endregion
-
-        public override void Load(string fileName)
-        {
-            throw new NotSupportedException();
-        }
 
         private void LoadConflicts()
         {
