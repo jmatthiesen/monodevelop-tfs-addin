@@ -54,6 +54,6 @@ namespace MonoDevelop.VersionControl.TFS.MonoDevelopWrappers.Implementation
             progressMonitor.EndTask();
         }
 
-        public bool IsCancelRequested { get { throw new System.NotImplementedException(); } }
+        public bool IsCancelRequested { get { return false; } }
     }
 }

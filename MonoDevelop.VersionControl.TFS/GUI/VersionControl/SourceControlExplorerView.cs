@@ -260,25 +260,28 @@ namespace MonoDevelop.VersionControl.TFS.GUI.VersionControl
         private void FillTreeView()
         {
             _treeStore.Clear();
-            var items = this._currentWorkspace.GetItems(new[] { new ItemSpec(RepositoryPath.RootPath, RecursionType.Full) },
-                                                        VersionSpec.Latest, DeletedState.NonDeleted, ItemType.Folder, false);
-
-            var root = ItemSetToHierarchItemConverter.Convert(items);
-            var node = _treeStore.AppendNode();
-            //If Server name is equal to the server url get host.
-            var serverName = string.Equals(projectCollection.Server.Name, projectCollection.Server.Uri.OriginalString, StringComparison.OrdinalIgnoreCase)
-                ? projectCollection.Server.Uri.Host
-                : projectCollection.Server.Name;
-            var rootName = string.Format("{0}\\{1}", serverName, projectCollection.Name);
-            _treeStore.SetValues(node, root.Item, GetRepositoryImage(), rootName);
-            AddChilds(node, root.Children);
-            TreeIter firstNode;
-            if (_treeStore.GetIterFirst(out firstNode))
+            if (this._currentWorkspace != null)
             {
-                _treeView.ExpandRow(_treeStore.GetPath(firstNode), false);
-                _treeView.Selection.SelectIter(firstNode);
+                var items = this._currentWorkspace.GetItems(new[] { new ItemSpec(RepositoryPath.RootPath, RecursionType.Full) },
+                                                            VersionSpec.Latest, DeletedState.NonDeleted, ItemType.Folder, false);
+
+                var root = ItemSetToHierarchItemConverter.Convert(items);
+                var node = _treeStore.AppendNode();
+                //If Server name is equal to the server url get host.
+                var serverName = string.Equals(projectCollection.Server.Name, projectCollection.Server.Uri.OriginalString, StringComparison.OrdinalIgnoreCase)
+                    ? projectCollection.Server.Uri.Host
+                    : projectCollection.Server.Name;
+                var rootName = string.Format("{0}\\{1}", serverName, projectCollection.Name);
+                _treeStore.SetValues(node, root.Item, GetRepositoryImage(), rootName);
+                AddChilds(node, root.Children);
+                TreeIter firstNode;
+                if (_treeStore.GetIterFirst(out firstNode))
+                {
+                    _treeView.ExpandRow(_treeStore.GetPath(firstNode), false);
+                    _treeView.Selection.SelectIter(firstNode);
+                }
+                _treeView.Model = _treeStore;
             }
-            _treeView.Model = _treeStore;
         }
 
         int treeLevel;

@@ -171,8 +171,9 @@ namespace MonoDevelop.VersionControl.TFS.Core.Structure
         {
             lock (locker)
             {
-                if (_localWorkspaces != null)
-                    return _localWorkspaces;
+                // TODO: Uncomment this code & figure out how to refresh the cache of local workspaces
+                //if (_localWorkspaces != null)
+                    //return _localWorkspaces;
                 _localWorkspaces = repositoryService.Value.QueryWorkspaces(Server.UserName, Environment.MachineName);
                 return _localWorkspaces;
             }

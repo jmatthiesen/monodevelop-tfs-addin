@@ -115,7 +115,13 @@ namespace MonoDevelop.VersionControl.TFS.GUI
             UpdateData();
         }
 
-public override Control Control => throw new NotImplementedException();
+        public override Control Control
+        {
+            get
+            {
+                return (Gtk.Widget)Xwt.Toolkit.CurrentEngine.GetNativeWidget(this._content);
+            }
+        }
 
         #endregion
 
