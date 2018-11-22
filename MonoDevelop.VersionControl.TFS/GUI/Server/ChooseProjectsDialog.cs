@@ -107,7 +107,8 @@ namespace MonoDevelop.VersionControl.TFS.GUI.Server
                     }
                 }
             };
-            projectsList.Columns.Add(new ListViewColumn("", checkView));
+            projectsList.Columns.Add(new ListViewColumn("", 
+                checkView));
             projectsList.Columns.Add(new ListViewColumn("Name", new TextCellView(projectName)));
             hbox.PackEnd(projectsList);
 
