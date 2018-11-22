@@ -271,7 +271,8 @@ namespace MonoDevelop.VersionControl.TFS.GUI.VersionControl
                 var serverName = string.Equals(projectCollection.Server.Name, projectCollection.Server.Uri.OriginalString, StringComparison.OrdinalIgnoreCase)
                     ? projectCollection.Server.Uri.Host
                     : projectCollection.Server.Name;
-                var rootName = string.Format("{0}\\{1}", serverName, projectCollection.Name);
+                var rootName = string.Format("{0}\\{1}",
+                    serverName, projectCollection.Name);
                 _treeStore.SetValues(node, root.Item, GetRepositoryImage(), rootName);
                 AddChilds(node, root.Children);
                 TreeIter firstNode;
