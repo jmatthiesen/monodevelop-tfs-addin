@@ -153,8 +153,7 @@ namespace MonoDevelop.VersionControl.TFS.GUI.Server
 
         void OnRemoveServer(object sender, EventArgs e)
         {
-            if (MessageService.Confirm("Are you sure you want to delete this server!",
-                AlertButton.Delete))
+            if (MessageService.Confirm("Are you sure you want to delete this server!", AlertButton.Delete))
             {
                 var serverUrl = serverStore.GetValue(serverList.SelectedRow, urlField);
                 _service.RemoveServer(serverUrl);
